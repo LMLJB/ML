@@ -9,7 +9,7 @@ EPOCH = 1  # 训练次数
 BATCH_SIZE = 10
 DOWNLOAD_MNIST = True  # 表示还没有下载数据集，如果数据集下载好了就写False
 
-# 预测函数
+# 预测函数   
 def predict():
     # 数据处理
     test_dir = r'D:\Homework\project4\test'
