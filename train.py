@@ -23,6 +23,7 @@ NUM_WORKERS = 0
 dataset_dir = r'C:\ML'  # 数据集路径
 train_path = os.path.join(dataset_dir, 'train')  # 训练集路径
 train_dataset = datasets.ImageFolder(train_path, transform=train_transform)  # 载入训练集
+# 种子seed
 
 # 训练集的数据加载器
 train_loader = DataLoader(train_dataset,
