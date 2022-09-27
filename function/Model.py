@@ -7,13 +7,13 @@ from torchvision import datasets, transforms
 LR = 0.001  # 学习率
 EPOCH = 1  # 训练次数
 BATCH_SIZE = 10
-DOWNLOAD_MNIST = True  # 表示还没有下载数据集，如果数据集下载好了就写False
+
 
 
 # 预测函数
 def predict():
     # 数据处理
-    test_dir = r'D:\Homework\project4\test'
+    test_dir = r'D:\Homework\project4\test'  # 这个路径可能需要统一下
     transform_train_test = torchvision.transforms.Compose(
         [transforms.Resize((512, 512)), torchvision.transforms.ToTensor(),
          torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])

@@ -7,7 +7,7 @@ from torchvision import datasets, transforms
 LR = 0.001  # 学习率
 EPOCH = 1  # 训练次数
 BATCH_SIZE = 10
-DOWNLOAD_MNIST = True  # 表示还没有下载数据集，如果数据集下载好了就写False
+
 
 # 预测函数   
 def predict():
