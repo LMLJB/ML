@@ -9,6 +9,7 @@ EPOCH = 1  # 训练次数
 BATCH_SIZE = 10
 DOWNLOAD_MNIST = True  # 表示还没有下载数据集，如果数据集下载好了就写False
 
+
 # 预测函数
 def predict():
     # 数据处理
@@ -17,12 +18,10 @@ def predict():
         [transforms.Resize((512, 512)), torchvision.transforms.ToTensor(),
          torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     test_set = datasets.ImageFolder(test_dir, transform=transform_train_test)
-    test_data = DataLoader(test_set, batch_size=10, shuffle=False, num_workers=0)
+    #  test_data = DataLoader(test_set, batch_size=10, shuffle=False, num_workers=0)
     testloader = torch.utils.data.DataLoader(test_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
-    # 获取cnn网络
-    net = torchvision.models.resnet18()
-    # 加载模型
-    net.load_state_dict(torch.load('test_cifar_gpu.pkl'))
+    net = torchvision.models.resnet18()  # 获取cnn网络
+    net.load_state_dict(torch.load('test_cifar_gpu.pkl'))  # 加载模型
     # 设置为推理模式
     net.eval()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -67,22 +66,21 @@ def train_model():
         for step, (inputs, labels) in enumerate(train_data):  # 分配batch data
             # 未加载到GPU中
             output = net(inputs)  # 将数据放入cnn中计算输出
-            loss = loss_func(output, labels)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+            loss = loss_func(output, labels)  # 计算损失
+            optimizer.zero_grad()  # 清空过往梯度
+            loss.backward()  # 反向传播，计算当前梯度；
+            optimizer.step()  # 根据梯度更新网络参数
             ### 梯度下降算法 ###
             # 数据加载到cpu中
             loss = loss.to('cpu')
             running_loss += loss.item()
-            if step % 10 == 0:
-                print('[%d, %5d] loss: %.3f' % (epoch + 1, step + 1, running_loss / 10))
+            if step % BATCH_SIZE == 0:
+                print('[%d, %5d] loss: %.3f' % (epoch + 1, step + 1, running_loss / BATCH_SIZE))
                 running_loss = 0.0
-                # 保存模型
-    torch.save(net.state_dict(), 'test_cifar_gpu.pkl')
+    torch.save(net.state_dict(), 'test_cifar_gpu.pkl')  # 保存模型
 
 
-# 无用
+# 无用，用于模型测试
 def dataloader():
     transforms = torchvision.transforms.Compose(
         [torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
