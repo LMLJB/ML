@@ -2,9 +2,7 @@ import torch
 import torchvision
 import os
 import torch.nn as nn
-import torch.optim as optim
-import torchvision.transforms.functional as F
-# from tqdm import tqdm
+from function.Show import show_train_loss
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from pretreatment import train_transform
@@ -34,14 +32,14 @@ train_loader = DataLoader(train_dataset,
 
 ## 每个batch输入进行的操作，用于for epoch中的for batch
 
-def train_one_batch():
-    print('未实现')
+# train_one_batch(): 该方法应该不用实现
 
 
 def train_model():
     model = torchvision.models.resnet18()  # 设置模型
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)  # 优化器
     loss_func = nn.CrossEntropyLoss()  # 定义损失函数
+    log_epoch_history = {}
     # 开始训练
     for epoch in range(EPOCH):
         # 单个batch训练
@@ -56,12 +54,15 @@ def train_model():
             optimizer.step()  # 根据梯度更新网络参数
             loss = loss.to('cpu')
             running_loss += loss.item()
+            # TODO 记录训练过程中的正确率
             step += 1
             if step % BATCH_SIZE == 0:
                 print('[%d, %5d] loss: %.3f' % (epoch, step, running_loss / BATCH_SIZE))
                 log_train_loss.append(running_loss)
                 running_loss = 0.0
-        #train_one_batch(model, optimizer, loss_func, epoch)
+        show_train_loss(log_train_loss)  # 显示训练的loss变化过程
+        log_epoch_history[str(epoch + 1)] = log_train_loss  # 记录整个训练历史
     # 保存单个模型
     # TODO 注意，保存模型的文件名已经更改，预测函数读取的文件名未更改，记得更改。更改后可以把该条注释删除
     torch.save(model.state_dict(), 'test_gpu.pkl')
+    return log_epoch_history
