@@ -52,4 +52,5 @@ def predict(loader):
             100 * correct / total))
 
 
+# 预测
 predict(test_loader)
