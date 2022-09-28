@@ -33,7 +33,9 @@ train_loader = DataLoader(train_dataset,
 
 
 ## 每个batch输入进行的操作，用于for epoch中的for batch
-# def train_one_batch()
+
+def train_one_batch():
+    print('未实现')
 
 
 def train_model():
@@ -42,20 +44,24 @@ def train_model():
     loss_func = nn.CrossEntropyLoss()  # 定义损失函数
     # 开始训练
     for epoch in range(EPOCH):
+        # 单个batch训练
         running_loss = 0.0
+        log_train_loss = []  # 记录训练时每个batch的损失值
         for step, (inputs, labels) in enumerate(train_loader):  # 分配batch data
             # 未加载到GPU中
             output = model(inputs)  # 将数据放入cnn中计算输出
             loss = loss_func(output, labels)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            ### 梯度下降算法 ###
-            # 数据加载到cpu中
+            optimizer.zero_grad()  # 清空过往梯度
+            loss.backward()  # 反向传播，计算当前梯度；
+            optimizer.step()  # 根据梯度更新网络参数
             loss = loss.to('cpu')
             running_loss += loss.item()
-            if step % 10 == 0:
-                print('[%d, %5d] loss: %.3f' % (epoch + 1, step + 1, running_loss / 10))
+            step += 1
+            if step % BATCH_SIZE == 0:
+                print('[%d, %5d] loss: %.3f' % (epoch, step, running_loss / BATCH_SIZE))
+                log_train_loss.append(running_loss)
                 running_loss = 0.0
-                # 保存模型
-    torch.save(model.state_dict(), 'test_cifar_gpu.pkl')
+        #train_one_batch(model, optimizer, loss_func, epoch)
+    # 保存单个模型
+    # TODO 注意，保存模型的文件名已经更改，预测函数读取的文件名未更改，记得更改。更改后可以把该条注释删除
+    torch.save(model.state_dict(), 'test_gpu.pkl')
