@@ -6,7 +6,7 @@ from torch import nn
 class Net(nn.Module):  # 我们建立的Net继承nn.Module这个模块
 
     def __init__(self):
-        super(Net, self).__init__()  # 第二、三行都是python类继承的基本操作,此写法应该是python2.7的继承格式,但python3里写这个好像也可以
+        super(Net, self).__init__()  # 第二、三行都是python类继承的基本操作
         self.conv1 = nn.Conv2d(3, 6, 5)  # 添加第一个卷积层,调用了nn里面的Conv2d（）
         self.pool = nn.MaxPool2d(2, 2)  # 最大池化层
         self.conv2 = nn.Conv2d(6, 16, 5)  # 同样是卷积层
