@@ -29,7 +29,8 @@ def predict():
     total = 0
     create_save_images_dir()
     with torch.no_grad():
-        for data in test_loader:
+        loop = tqdm(test_loader)
+        for data in loop:
             images, labels = data
             # 数据加载到gpu中
             images = images.to(device)
