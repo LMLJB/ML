@@ -68,8 +68,8 @@ def show_predicted(predicted, labels, images):
     length = len(predicted)
     for i in range(length):
         if predicted[i] != labels[i]:
-            print(image_path + '\\' + label_name[labels[i]] + str(i) + '.jpg')
-            v_utils.save_image(images[i], image_path + '\\' + label_name[labels[i]] + str(i) + '.jpg')
+            # print(image_path + '\\' + label_name[predicted[i]] + str(i) + '.jpg')
+            v_utils.save_image(images[i], image_path + '\\' + label_name[predicted[i]] + str(i) + '.jpg')
 
 
 # train_loss, test_loss = load_data()
