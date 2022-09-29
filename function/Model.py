@@ -1,110 +1,30 @@
 import torch
-import torchvision
 from torch import nn
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
-
-LR = 0.001  # 学习率
-EPOCH = 1  # 训练次数
-BATCH_SIZE = 10
 
 
+# 用class类来建立CNN模型
+class Net(nn.Module):  # 我们建立的Net继承nn.Module这个模块
 
-# 预测函数
-def predict():
-    # 数据处理
-    test_dir = r'D:\Homework\project4\test'  # 这个路径可能需要统一下
-    transform_train_test = torchvision.transforms.Compose(
-        [transforms.Resize((512, 512)), torchvision.transforms.ToTensor(),
-         torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-    test_set = datasets.ImageFolder(test_dir, transform=transform_train_test)
-    #  test_data = DataLoader(test_set, batch_size=10, shuffle=False, num_workers=0)
-    testloader = torch.utils.data.DataLoader(test_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
-    net = torchvision.models.resnet18()  # 获取cnn网络
-    net.load_state_dict(torch.load('test_cifar_gpu.pkl'))  # 加载模型
-    # 设置为推理模式
-    net.eval()
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    # 模型加载到gpu中
-    net = net.to(device)
-    correct = 0
-    total = 0
-    # since we're not training, we don't need to calculate the gradients for our outputs
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data
-            # 数据加载到gpu中
-            images = images.to(device)
-            labels = labels.to(device)
-            # calculate outputs by running images through the network
-            outputs = net(images)
-            # 数据加载回cpu
-            outputs = outputs.to('cpu')
-            labels = labels.to('cpu')
-            # the class with the highest energy is what we choose as prediction
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    print('Accuracy of the network on the 10000 test images: %d %%' % (
-            100 * correct / total))
+    def __init__(self):
+        super(Net, self).__init__()  # 第二、三行都是python类继承的基本操作,此写法应该是python2.7的继承格式,但python3里写这个好像也可以
+        self.conv1 = nn.Conv2d(3, 6, 5)  # 添加第一个卷积层,调用了nn里面的Conv2d（）
+        self.pool = nn.MaxPool2d(2, 2)  # 最大池化层
+        self.conv2 = nn.Conv2d(6, 16, 5)  # 同样是卷积层
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)  # 接着三个全连接层
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
 
+    def forward(self, x):  # 这里定义前向传播的方法，为什么没有定义反向传播的方法呢？这其实就涉及到torch.autograd模块了，
+        # 但说实话这部分网络定义的部分还没有用到autograd的知识，所以后面遇到了再讲
+        x = self.pool(torch.nn.functional.relu(self.conv1(x)))  # F是torch.nn.functional的别名，这里调用了relu函数 F.relu()
+        x = self.pool(torch.nn.functional.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 5 * 5)  # .view( )是一个tensor的方法，使得tensor改变size但是元素的总数是不变的。
+        #  第一个参数-1是说这个参数由另一个参数确定， 比如矩阵在元素总数一定的情况下，确定列数就能确定行数。
+        #  那么为什么这里只关心列数不关心行数呢，因为马上就要进入全连接层了，而全连接层说白了就是矩阵乘法，
+        #  你会发现第一个全连接层的首参数是16*5*5，所以要保证能够相乘，在矩阵乘法之前就要把x调到正确的size
+        # 更多的Tensor方法参考Tensor: http://pytorch.org/docs/0.3.0/tensors.html
+        x = torch.nn.functional.relu(self.fc1(x))
+        x = torch.nn.functional.relu(self.fc2(x))
+        x = self.fc3(x)
 
-def train_model():
-    # 读取数据
-    train_dir = r'D:\Homework\project4\train'
-    transform_train_test = torchvision.transforms.Compose(
-        [transforms.Resize((512, 512)), torchvision.transforms.ToTensor(),
-         torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-    train_set = datasets.ImageFolder(train_dir, transform=transform_train_test)
-    train_data = DataLoader(train_set, batch_size=10, shuffle=True, num_workers=0)  # shuffle是否打乱数据
-    net = torchvision.models.resnet18()  # 设置模型
-    optimizer = torch.optim.Adam(net.parameters(), lr=LR)  # 优化器
-    loss_func = nn.CrossEntropyLoss()  # 定义损失函数
-    # 开始训练
-    for epoch in range(EPOCH):
-        running_loss = 0.0
-        for step, (inputs, labels) in enumerate(train_data):  # 分配batch data
-            # 未加载到GPU中
-            output = net(inputs)  # 将数据放入cnn中计算输出
-            loss = loss_func(output, labels)  # 计算损失
-            optimizer.zero_grad()  # 清空过往梯度
-            loss.backward()  # 反向传播，计算当前梯度；
-            optimizer.step()  # 根据梯度更新网络参数
-            ### 梯度下降算法 ###
-            # 数据加载到cpu中
-            loss = loss.to('cpu')
-            running_loss += loss.item()
-            if step % BATCH_SIZE == 0:
-                print('[%d, %5d] loss: %.3f' % (epoch + 1, step + 1, running_loss / BATCH_SIZE))
-                running_loss = 0.0
-    torch.save(net.state_dict(), 'test_cifar_gpu.pkl')  # 保存模型
-
-
-# 无用，用于模型测试
-def dataloader():
-    transforms = torchvision.transforms.Compose(
-        [torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-
-    # 下载CIFAR10数据集
-    train_data = torchvision.datasets.CIFAR10(
-        root='./data/',  # 保存或提取的位置  会放在当前文件夹中
-        train=True,  # true说明是用于训练的数据，false说明是用于测试的数据
-        transform=transforms,  # 转换PIL.Image or numpy.ndarray
-        download=DOWNLOAD_MNIST,  # 已经下载了就不需要下载了
-    )
-
-    test_data = torchvision.datasets.CIFAR10(
-        root='./data',
-        train=False,
-        download=True,
-        transform=transforms,
-    )
-
-    return train_data, test_data
-
-
-# train_data, test_data = dataloader()
-train_model()
-predict()
-
-
+        return x
