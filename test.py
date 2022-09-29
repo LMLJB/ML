@@ -9,7 +9,7 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from pretreatment import test_transform
-from function.Show import deal_predicted, create_save_images_dir
+from function.Show import show_predicted, create_save_images_dir
 
 BATCH_SIZE = 50
 NUM_WORKERS = 0
@@ -43,7 +43,7 @@ def predict():
             # print("images: ", images)
             # print("predicted: ", predicted)
             # print("labels: ", labels)
-            deal_predicted(predicted, labels, images)
+            show_predicted(predicted, labels, images)
             correct += (predicted == labels).sum().item()
     print('Accuracy of the network on the 10000 test images: %d %%' % (
             100 * correct / total))
