@@ -9,11 +9,14 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from pretreatment import test_transform
-from function.Show import show_predicted, create_save_images_dir
+from function.Show import show_predicted, create_save_images_dir, get_files_num, save_data
 
-BATCH_SIZE = 50
+BATCH_SIZE = 35
 NUM_WORKERS = 0
 test_path = r'C:\ML\t_test'
+image_path = r'C:\ML\save_image'
+contrast_image_path = r'C:\ML\image'
+test_history_path = r'C:\ML\history\test.txt'
 test_dataset = datasets.ImageFolder(test_path, transform=test_transform)  # 载入训练集
 test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE,   # 训练集的数据加载器
                          shuffle=False, num_workers=NUM_WORKERS)
@@ -27,7 +30,9 @@ def predict():
     net = net.to(device)  # 模型加载到gpu中
     correct = 0
     total = 0
-    create_save_images_dir()
+    create_save_images_dir(image_path)  # 创建保存预测错误图片的文件夹
+    create_save_images_dir(contrast_image_path)  # 与上一个图片文件夹对比
+    _, files_prefix_num = get_files_num(test_path)
     with torch.no_grad():
         loop = tqdm(test_loader)
         for data in loop:
@@ -41,13 +46,12 @@ def predict():
             labels = labels.to(device)
             _, predicted = torch.max(outputs.data, 1)  # 取行最大值
             total += labels.size(0)
-            # print("images: ", images)
-            # print("predicted: ", predicted)
-            # print("labels: ", labels)
-            show_predicted(predicted, labels, images)
+            show_predicted(predicted, labels, images, files_prefix_num, total, test_path)
             correct += (predicted == labels).sum().item()
     print('Accuracy of the network on the 10000 test images: %d %%' % (
             100 * correct / total))
+    history_data = {"batch_size": BATCH_SIZE, "test_accuracy": 100 * correct / total}
+    save_data(test_history_path, history_data)  # 将训练数据保存到文件中
 
 
 # 预测

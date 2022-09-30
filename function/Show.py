@@ -9,6 +9,8 @@ from torchvision.transforms import ToPILImage
 from torchvision import utils as v_utils
 
 image_path = r'C:\ML\save_image'
+contrast_image_path = r'C:\ML\image'
+
 show_image = ToPILImage()  # 把Tensor转变为Image
 class_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿', '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田', '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地', '立交桥', '篮球场', '网球场', '草地', '裸地', '足球场', '路边停车区', '转盘', '铁路', '风力发电站', '高尔夫球场']
 
@@ -57,20 +59,63 @@ def show_train_test_loss(log_train_loss, log_test_loss):
 
 
 # 创建文件夹
-def create_save_images_dir():
-    if os.path.isdir(image_path):
-        shutil.rmtree(image_path)
-    os.mkdir(image_path)
+def create_save_images_dir(path):
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+    os.mkdir(path)
+
+
+# 获取相应序号文件名
+def get_file_name(path, index):
+    files_name = os.listdir(path)
+    return files_name[index]
 
 
 # 显示预测错误图片
-def show_predicted(predicted, labels, images):
+def show_predicted(predicted, labels, images, prefix_num, total, test_path):
     length = len(predicted)
+    base = total - labels.size(0)
+    index = 0
+    for num in prefix_num:
+        if num > base:
+            break
+        index += 1
+
     for i in range(length):
         if predicted[i] != labels[i]:
+            image_number = base + i
+            if image_number >= prefix_num[index]:
+                num = image_number - prefix_num[index]  # 图片编号
+                index += 1
+            else:
+                if index - 1 < 0:
+                    num = image_number
+                else:
+                    num = image_number - prefix_num[index - 1]
             # print(image_path + '\\' + label_name[predicted[i]] + str(i) + '.jpg')
-            v_utils.save_image(images[i], image_path + '\\' + class_name[labels[i]] + str(i + 1)
+            path = test_path + '\\' + class_name[labels[i]]
+            file_name = get_file_name(path, num)
+            shutil.copy(path + '\\' + file_name, contrast_image_path)
+            v_utils.save_image(images[i], image_path + '\\' + file_name + '-' + class_name[labels[i]] + str(num + 1)
                                + "-" + class_name[predicted[i]] + '.jpg')
+
+
+# 获取路径下每个文件夹中文件数量
+def get_files_num(path):
+    files_num = []
+    for name in class_name:
+        files_num.append(len(os.listdir(path + "\\" + name)))
+    prefix_num = [0]  # 前缀和
+    prefix_num[0] = files_num[0]
+    for i in range(1, len(files_num)):
+        prefix_num.append(prefix_num[i - 1] + files_num[i])
+    return files_num, prefix_num
+
+
+# 像文件中追加数据
+def save_data(path, data):
+    with open(path, 'a') as f:
+        f.write(str(data))
 
 
 # train_loss, test_loss = load_data()
