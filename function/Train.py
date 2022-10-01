@@ -9,14 +9,14 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from pretreatment import train_transform
 from function.Show import save_data
-from Model import ResNet18, BasicBlock
+from Model import ResNet18, BasicBlock, ResNet50, Bottleneck
 
 
 # 超参数
 LR = 0.001  # 学习率
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
-BATCH_SIZE = 50  # 一次输入训练的批量
-EPOCH = 4  # 训练次数
+BATCH_SIZE = 10  # 一次输入训练的批量
+EPOCH = 5  # 训练次数
 NUM_WORKERS = 0
 train_history_path = r'C:\ML\history\train.txt'
 dataset_dir = r'C:\ML'  # 数据集路径
@@ -33,7 +33,8 @@ train_loader = DataLoader(train_dataset,
 # 模型训练模型
 def train_model():
     # model = torchvision.models.resnet18()  # 设置模型
-    model = ResNet18(BasicBlock, 45)
+    # model = ResNet18(BasicBlock, 45)
+    model = ResNet50(Bottleneck, 45)
     model = model.to(DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)  # 优化器
     loss_func = nn.CrossEntropyLoss()  # 定义损失函数

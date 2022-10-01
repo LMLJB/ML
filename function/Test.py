@@ -5,7 +5,7 @@ import os
 import torch.nn as nn
 from tqdm import tqdm
 
-from function.Model import ResNet18, BasicBlock
+from function.Model import ResNet18, BasicBlock, ResNet50, Bottleneck
 from function.Show import show_train_loss
 from torchvision import datasets
 from torch.utils.data import DataLoader
@@ -27,7 +27,8 @@ test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE,   # 训练集的�
 
 def predict():
     # net = torchvision.models.resnet18()  # 获取cnn网络
-    net = ResNet18(BasicBlock, 1000)
+    # net = ResNet18(BasicBlock, 45)
+    net = ResNet50(Bottleneck, 45)
     net.load_state_dict(torch.load('test_gpu.pkl'))  # 加载模型
     net.eval()  # 设置为推理模式
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

@@ -56,26 +56,26 @@ class BasicBlock(nn.Module):
 
 
 class Bottleneck(nn.Module):
-    def __init__(self, in_channels, out_channels, stride=[1, 1, 1], padding=1):
+    def __init__(self, in_channels, out_channels, stride=[1, 1, 1]):
         super(Bottleneck, self).__init__()
         self.layer = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride[0], padding=padding, bias=False),
+            nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride[0], padding=0, bias=False),
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),  # 替代原来变量
-            nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=stride[1], padding=padding, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=stride[1], padding=1, bias=False),
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),  # 替代原来变量
-            nn.Conv2d(out_channels, out_channels, kernel_size=1, stride=stride[2], padding=padding, bias=False),
-            nn.BatchNorm2d(out_channels)
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels * 4, kernel_size=1, stride=stride[2], padding=0, bias=False),
+            nn.BatchNorm2d(out_channels * 4)
         )
 
         # shortcut 部分
         # 由于存在维度不一致的情况 所以分情况
+        out_channels = out_channels * 4
         self.shortcut = nn.Sequential()
-        if stride[0] != 1 or in_channels != out_channels:
+        if in_channels != out_channels:
             self.shortcut = nn.Sequential(
-                # 卷积核为1 进行升降维
-                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride[0], bias=False),  #
+                nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride[1], padding=1, bias=False),  #
                 nn.BatchNorm2d(out_channels)
             )
 
@@ -161,7 +161,7 @@ class ResNet50(nn.Module):
         layers = []
         for stride in strides:
             layers.append(block(self.in_channels, out_channels, stride))
-            self.in_channels = out_channels
+            self.in_channels = out_channels * 4
         return nn.Sequential(*layers)
 
     def forward(self, x):
