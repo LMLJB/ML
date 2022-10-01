@@ -17,8 +17,9 @@ from function.Show import show_predicted, create_save_images_dir, get_files_num,
 BATCH_SIZE = 35
 NUM_WORKERS = 0
 test_path = r'C:\ML\t_test'
-image_path = r'C:\ML\save_image'
-contrast_image_path = r'C:\ML\image'
+image_path = r'C:\ML\save_image'  # 废弃
+contrast_image_path = r'C:\ML\image'  # 废弃
+error_image_path = r'C:\ML\error_result_image'
 test_history_path = r'C:\ML\history\test.txt'
 test_dataset = datasets.ImageFolder(test_path, transform=test_transform)  # 载入训练集
 test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE,   # 训练集的数据加载器
@@ -35,8 +36,7 @@ def predict():
     net = net.to(device)  # 模型加载到gpu中
     correct = 0
     total = 0
-    create_save_images_dir(image_path)  # 创建保存预测错误图片的文件夹
-    create_save_images_dir(contrast_image_path)  # 与上一个图片文件夹对比
+    create_save_images_dir(error_image_path)  # 创建保存预测错误图片的文件夹
     _, files_prefix_num = get_files_num(test_path)
     with torch.no_grad():
         loop = tqdm(test_loader)

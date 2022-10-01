@@ -8,8 +8,10 @@ from matplotlib.ticker import MaxNLocator
 from torchvision.transforms import ToPILImage
 from torchvision import utils as v_utils
 
+error_image_path = r'C:\ML\error_result_image'
 image_path = r'C:\ML\save_image'
 contrast_image_path = r'C:\ML\image'
+loss_image_path = r'C:\ML\loss_image'
 
 show_image = ToPILImage()  # 把Tensor转变为Image
 class_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿', '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田', '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地', '立交桥', '篮球场', '网球场', '草地', '裸地', '足球场', '路边停车区', '转盘', '铁路', '风力发电站', '高尔夫球场']
@@ -37,11 +39,14 @@ def show_one_line(data, name, x_label_name, y_label_name):
 def show_train_loss(log_train_loss):
     iterations = len(log_train_loss)
     index = np.arange(0, iterations, 1)
+    fig = plt.figure()
     plt.plot(index, log_train_loss, c='blue', linestyle='solid', label='train')
     plt.legend()
     plt.xlabel("Batch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
+    create_save_images_dir(loss_image_path)
+    plt.savefig(loss_image_path + time.strftime('%Y-%m-%d %H:%M:S') + ".svg")
     plt.show()
 
 
@@ -92,12 +97,12 @@ def show_predicted(predicted, labels, images, prefix_num, total, test_path):
                     num = image_number
                 else:
                     num = image_number - prefix_num[index - 1]
-            # print(image_path + '\\' + label_name[predicted[i]] + str(i) + '.jpg')
             path = test_path + '\\' + class_name[labels[i]]
             file_name = get_file_name(path, num)
-            shutil.copy(path + '\\' + file_name, contrast_image_path)
-            v_utils.save_image(images[i], image_path + '\\' + file_name + '-' + class_name[labels[i]] + str(num + 1)
+            shutil.copy(path + '\\' + file_name, error_image_path + '\\' + class_name[labels[i]] + str(num + 1)
                                + "-" + class_name[predicted[i]] + '.jpg')
+            # v_utils.save_image(images[i], image_path + '\\' + file_name + '-' + class_name[labels[i]] + str(num + 1)
+            #                    + "-" + class_name[predicted[i]] + '.jpg')
 
 
 # 获取路径下每个文件夹中文件数量
@@ -115,8 +120,9 @@ def get_files_num(path):
 # 像文件中追加数据
 def save_data(path, data):
     with open(path, 'a') as f:
-        f.write("\n\n")
-        f.write(str(data))
+        f.write(time.strftime('%Y-%m-%d %H:%M:S') + '\n')
+        f.write(str(data) + '\n')
+        f.write("\n")
 
 
 # train_loss, test_loss = load_data()

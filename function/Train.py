@@ -13,7 +13,7 @@ from Model import ResNet18, BasicBlock, ResNet50, Bottleneck
 
 
 # 超参数
-LR = 0.001  # 学习率
+LR = 0.00001  # 学习率
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
 BATCH_SIZE = 10  # 一次输入训练的批量
 EPOCH = 5  # 训练次数
@@ -60,11 +60,11 @@ def train_model():
             log_train_loss.append(running_loss)
             log_all_epoch_history.append(running_loss)
             running_loss = 0.0
-        show_train_loss(log_train_loss)  # 显示单个epoch训练的loss变化过程
-    show_train_loss(log_all_epoch_history)  # 显示所有loss变化过程
+        # show_train_loss(log_train_loss)  # 显示单个epoch训练的loss变化过程
     history_data = {"batch_size": BATCH_SIZE, "epoc": EPOCH, "train_loss_change": log_all_epoch_history}
     save_data(train_history_path, history_data)  # 将训练数据保存到文件中
     torch.save(model.state_dict(), 'test_gpu.pkl')  # 保存单个模型
+    show_train_loss(log_all_epoch_history)  # 显示所有loss变化过程
 
 
 train_model()
