@@ -49,14 +49,13 @@ def train_model():
             inputs = inputs.to(DEVICE)
             labels = labels.to(DEVICE)
             output = model(inputs)  # 将数据放入cnn中计算输出
+            # print("output: ", output.shape)
             loss = loss_func(output, labels)
             optimizer.zero_grad()  # 清空过往梯度
             loss.backward()  # 反向传播，计算当前梯度；
             optimizer.step()  # 根据梯度更新网络参数
             loss = loss.to(DEVICE)  # loss.to('cpu')
             running_loss += loss.item()
-            # TODO 记录训练过程中的正确率
-            # print('[%d, %5d] loss: %.3f' % (epoch, step + 1, running_loss))
             log_train_loss.append(running_loss)
             log_all_epoch_history.append(running_loss)
             running_loss = 0.0
