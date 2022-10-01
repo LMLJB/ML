@@ -115,6 +115,7 @@ def get_files_num(path):
 # 像文件中追加数据
 def save_data(path, data):
     with open(path, 'a') as f:
+        f.write("\n\n")
         f.write(str(data))
 
 
