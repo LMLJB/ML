@@ -46,7 +46,8 @@ def show_train_loss(log_train_loss):
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
     create_save_images_dir(loss_image_path)
-    plt.savefig(loss_image_path + time.strftime('%Y-%m-%d %H:%M:S') + ".svg")
+    # print(loss_image_path + '\\' + time.strftime('%Y-%m-%d_%H-%M') + ".jpg")
+    plt.savefig(loss_image_path + '\\' + time.strftime('%Y-%m-%d_%H-%M') + ".jpg")
     plt.show()
 
 
@@ -120,7 +121,7 @@ def get_files_num(path):
 # 像文件中追加数据
 def save_data(path, data):
     with open(path, 'a') as f:
-        f.write(time.strftime('%Y-%m-%d %H:%M:S') + '\n')
+        f.write(time.strftime('%Y-%m-%d_%H:%M') + '\n')
         f.write(str(data) + '\n')
         f.write("\n")
 
