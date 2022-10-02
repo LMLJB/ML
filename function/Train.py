@@ -1,41 +1,44 @@
 import torch
-import torchvision
+# import torchvision
 import os
 import torch.nn as nn
 from tqdm import tqdm
-
 from function.Show import show_train_loss
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from pretreatment import train_transform
 from function.Show import save_data
-from Model import resnet18  # resnet18/resnet50
+from Model import resnet18, resnet50  # resnet18/resnet50
 
 
 # 超参数
-LR = 0.00001  # 学习率
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
+LR = 0.00001      # 学习率
+DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
 BATCH_SIZE = 200  # 一次输入训练的批量
-EPOCH = 1  # 训练次数
+EPOCH = 1         # 训练次数
 NUM_WORKERS = 0
-train_history_path = r'C:\ML\history\train.txt'
+LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
+SEED = 1          # 固定种子，以保证获取相同的训练结果
+MODEL = resnet18()
 dataset_dir = r'C:\ML'  # 数据集路径
 train_path = os.path.join(dataset_dir, 'train')  # 训练集路径
+train_history_path = r'C:\ML\history\train.txt'
+
 train_dataset = datasets.ImageFolder(train_path, transform=train_transform)  # 载入训练集
-torch.manual_seed(1)  # 使用随机化种子使神经网络的初始化每次都相同
+torch.manual_seed(SEED)  # 使用随机化种子使神经网络的初始化每次都相同
 # 训练集的数据加载器
 train_loader = DataLoader(train_dataset,
                           batch_size=BATCH_SIZE,
-                          shuffle=True,  # shuffle是否打乱数据
+                          shuffle=True,             # shuffle为是否打乱数据
                           num_workers=NUM_WORKERS)
 
 
 # 模型训练模型
 def train_model():
-    model = resnet18()
+    model = MODEL
     model = model.to(DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)  # 优化器
-    loss_func = nn.CrossEntropyLoss()  # 定义损失函数
+    loss_func = LOSS_FUNC
     log_all_epoch_history = []
     # 开始训练
     for epoch in range(EPOCH):
@@ -43,17 +46,15 @@ def train_model():
         running_loss = 0.0
         log_train_loss = []  # 记录训练时每个batch的损失值
         loop = tqdm(train_loader)
-        for step, (inputs, labels) in enumerate(loop):  # 分配batch data
-            # 未加载到GPU中
+        for inputs, labels in loop:  # 分配batch data -> inputs为输入图片, labels为输入图片的类型（标签）
             inputs = inputs.to(DEVICE)
             labels = labels.to(DEVICE)
-            output = model(inputs)  # 将数据放入cnn中计算输出
-            # print("output: ", output.shape)
+            output = model(inputs)            # 将数据放入resnet中计算输出
             loss = loss_func(output, labels)
-            optimizer.zero_grad()  # 清空过往梯度
-            loss.backward()  # 反向传播，计算当前梯度；
-            optimizer.step()  # 根据梯度更新网络参数
-            loss = loss.to(DEVICE)  # loss.to('cpu')
+            optimizer.zero_grad()             # 清空过往梯度
+            loss.backward()                   # 反向传播，计算当前梯度；
+            optimizer.step()                  # 根据梯度更新网络参数
+            loss = loss.to(DEVICE)            # 默认使用gpu计算损失
             running_loss += loss.item()
             log_train_loss.append(running_loss)
             log_all_epoch_history.append(running_loss)

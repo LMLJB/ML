@@ -118,7 +118,7 @@ def get_files_num(path):
     return files_num, prefix_num
 
 
-# 像文件中追加数据
+# 向文件中追加数据
 def save_data(path, data):
     with open(path, 'a') as f:
         f.write(time.strftime('%Y-%m-%d_%H:%M') + '\n')
