@@ -52,7 +52,7 @@ def train_model():
             optimizer.zero_grad()             # 清空过往梯度
             loss.backward()                   # 反向传播，计算当前梯度
             optimizer.step()                  # 根据梯度更新网络参数
-            loss = loss.to(DEVICE)            # 默认使用gpu计算损失
+            loss = loss.item()
             log_train_loss.append(loss)
             log_all_epoch_history.append(loss)
         # show_train_loss(log_train_loss)  # 显示单个epoch训练的loss变化过程
