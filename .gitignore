@@ -1,2 +1,5 @@
 /test/
 /train/
+/.pytest_cache/
+/error_result_image/
+/history/

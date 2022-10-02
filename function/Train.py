@@ -6,7 +6,7 @@ from tqdm import tqdm
 from function.Show import show_train_loss
 from torchvision import datasets
 from torch.utils.data import DataLoader
-from pretreatment import train_transform
+from Pretreatment import train_transform
 from function.Show import save_data
 from Model import resnet18, resnet50  # resnet18/resnet50
 

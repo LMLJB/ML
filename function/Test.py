@@ -5,7 +5,7 @@ import os
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from pretreatment import test_transform
+from Pretreatment import test_transform
 from function.Show import show_predicted, create_save_images_dir, get_files_num, save_data
 from Model import resnet18, resnet50  # resnet18/resnet50
 
