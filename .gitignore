@@ -3,3 +3,6 @@
 /.pytest_cache/
 /error_result_image/
 /history/
+/t_test/
+/t_train/
+/model and log/

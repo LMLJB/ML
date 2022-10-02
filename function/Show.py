@@ -8,47 +8,55 @@ from matplotlib.ticker import MaxNLocator
 from torchvision.transforms import ToPILImage
 from torchvision import utils as v_utils
 
-error_image_path = r'C:\ML\error_result_image'
-image_path = r'C:\ML\save_image'
-contrast_image_path = r'C:\ML\image'
-loss_image_path = r'C:\ML\loss_image'
+project_path = r'C:\ML'
+error_image_path = project_path + r'\error_result_image'
+image_path = project_path + r'\save_image'
+contrast_image_path = project_path + r'\image'
+loss_image_path = project_path + r'\loss_image'
 
 show_image = ToPILImage()  # 把Tensor转变为Image
-class_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿', '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田', '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地', '立交桥', '篮球场', '网球场', '草地', '裸地', '足球场', '路边停车区', '转盘', '铁路', '风力发电站', '高尔夫球场']
+labels_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿',
+               '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田',
+               '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地',
+               '立交桥', '篮球场', '网球场', '草地', '裸地', '足球场', '路边停车区', '转盘', '铁路', '风力发电站',
+               '高尔夫球场']
 
 
-def load_data():
-    log_train_loss = np.random.randn(20)
-    log_test_loss = np.random.randn(20)
-    return log_train_loss, log_test_loss
+# 创建文件夹并返回路径
+def create_dir(path):
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+    os.mkdir(path)
+    return str(path)
 
 
-# 单条线画图实现
-def show_one_line(data, name, x_label_name, y_label_name):
-    it = len(data)
-    index = np.arange(0, it, 1)
-    plt.plot(index, data, c='blue', linestyle='solid', label=name)
-    plt.legend()
-    plt.xlabel(x_label_name)
-    plt.ylabel(y_label_name)
-    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
-    plt.show()
+# 创建log.txt文件并记录训练模型的超参数
+def create_log_model(model_path, dic):
+    file = open(model_path + r'\log.txt', 'w')
+    for x, y in dic.items():
+        file.write(str(x) + " = " + str(y) + "\n")
+    file.close()
+
+
+# 往log.txt文件写入预测准确度
+def write_log_model(model_path, accuracy):
+    file = open(model_path + r'\log.txt', 'a')
+    file.write("accuracy = %.2f%%" % accuracy)
+    file.close()
 
 
 # 训练时的loss显示
-def show_train_loss(log_train_loss):
+def show_train_loss(log_train_loss, model_path):
     iterations = len(log_train_loss)
     index = np.arange(0, iterations, 1)
     fig = plt.figure()
     plt.plot(index, log_train_loss, c='blue', linestyle='solid', label='train')
     plt.legend()
-    plt.xlabel("Batch")
+    plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
-    create_save_images_dir(loss_image_path)
-    # print(loss_image_path + '\\' + time.strftime('%Y-%m-%d_%H-%M') + ".jpg")
-    plt.savefig(loss_image_path + '\\' + time.strftime('%Y-%m-%d_%H-%M') + ".jpg")
-    plt.show()
+    plt.savefig(model_path + r'\loss.jpg')
+    # plt.show()
 
 
 # 以epoch为迭代次数
@@ -64,17 +72,15 @@ def show_train_test_loss(log_train_loss, log_test_loss):
     plt.show()
 
 
-# 创建文件夹
-def create_save_images_dir(path):
-    if os.path.isdir(path):
-        shutil.rmtree(path)
-    os.mkdir(path)
-
-
 # 获取相应序号文件名
 def get_file_name(path, index):
     files_name = os.listdir(path)
     return files_name[index]
+
+
+def get_model_last_file_name(path):
+    num_files = os.listdir(path)
+    return num_files[len(num_files) - 1]
 
 
 # 显示预测错误图片
@@ -98,18 +104,18 @@ def show_predicted(predicted, labels, images, prefix_num, total, test_path):
                     num = image_number
                 else:
                     num = image_number - prefix_num[index - 1]
-            path = test_path + '\\' + class_name[labels[i]]
+            path = test_path + '\\' + labels_name[labels[i]]
             file_name = get_file_name(path, num)
-            shutil.copy(path + '\\' + file_name, error_image_path + '\\' + class_name[labels[i]] + str(num + 1)
-                               + "-" + class_name[predicted[i]] + '.jpg')
-            # v_utils.save_image(images[i], image_path + '\\' + file_name + '-' + class_name[labels[i]] + str(num + 1)
-            #                    + "-" + class_name[predicted[i]] + '.jpg')
+            shutil.copy(path + '\\' + file_name, error_image_path + '\\' + labels_name[labels[i]] + str(num + 1)
+                        + "-" + labels_name[predicted[i]] + '.jpg')
+            # v_utils.save_image(images[i], image_path + '\\' + file_name + '-' + labels_name[labels[i]] + str(num + 1)
+            #                    + "-" + labels_name[predicted[i]] + '.jpg')
 
 
 # 获取路径下每个文件夹中文件数量
 def get_files_num(path):
     files_num = []
-    for name in class_name:
+    for name in labels_name:
         files_num.append(len(os.listdir(path + "\\" + name)))
     prefix_num = [0]  # 前缀和
     prefix_num[0] = files_num[0]
@@ -121,12 +127,5 @@ def get_files_num(path):
 # 向文件中追加数据
 def save_data(path, data):
     with open(path, 'a') as f:
-        f.write(time.strftime('%Y-%m-%d_%H:%M') + '\n')
         f.write(str(data) + '\n')
         f.write("\n")
-
-
-# train_loss, test_loss = load_data()
-# show_train_test_loss(train_loss, test_loss)
-# print(train_loss)
-# show_train_loss(train_loss)

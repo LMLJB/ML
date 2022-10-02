@@ -161,5 +161,3 @@ def resnet18():
 def resnet50():
     model = ResNet50(Bottleneck, 45)
     return model
-
-

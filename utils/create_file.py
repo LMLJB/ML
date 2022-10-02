@@ -2,8 +2,8 @@ import os
 import shutil
 
 # 文件夹移动
-path = r'/test'  # 源文件夹
-target_path = r'C:\ML\t_test'  # 目标文件夹
+path = r'C:/ML/train'  # 源文件夹
+target_path = r'C:\ML\t_train'  # 目标文件夹
 
 dirs_name = os.listdir(path)  # 获取path文件加下文件夹名称
 print(dirs_name)
