@@ -43,7 +43,10 @@ def train_model():
     # 开始训练
     for epoch in range(EPOCH):
         log_train_loss = []  # 记录训练时每个batch的损失值
-        loop = tqdm(train_loader)
+        DESC = "EPOCH " + str(epoch+1)  # tqdm进度条左侧内容
+        UNIT = "Batches"                # tqdm进度条中处理量单位it改为Batches
+        COLOUR = "blue"                 # tqdm进度条的颜色
+        loop = tqdm(iterable=train_loader, desc=DESC, unit=UNIT, colour=COLOUR)
         for inputs, labels in loop:  # 分配batch data -> inputs为输入图片, labels为输入图片的类型（标签）
             inputs = inputs.to(DEVICE)
             labels = labels.to(DEVICE)
@@ -55,12 +58,13 @@ def train_model():
             loss = loss.item()
             log_train_loss.append(loss)
             log_all_epoch_history.append(loss)
-        # show_train_loss(log_train_loss)  # 显示单个epoch训练的loss变化过程
+            loop.set_postfix({"loss": loss})
     history_data = {"batch_size": BATCH_SIZE, "epoc": EPOCH, "train_loss_change": log_all_epoch_history}
     save_data(train_history_path, history_data)  # 将训练数据保存到文件中
     torch.save(model.state_dict(), 'test_gpu.pkl')  # 保存单个模型
     show_train_loss(log_all_epoch_history)  # 显示所有loss变化过程
 
 
+# 训练训练集
 if __name__ == '__main__':
     train_model()
