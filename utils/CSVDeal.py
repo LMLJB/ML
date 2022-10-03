@@ -1,5 +1,7 @@
 import csv
 import os.path
+
+import numpy as np
 import pandas as pd
 
 columns_name = ['model_number', 'model_name', 'learning_rate', 'epoch', 'batch_size', 'loss', 'accuracy', 'num_workers', 'loss_function']
@@ -18,7 +20,7 @@ def model_parameter_save(data, file_path=default_path):
         save_data = []
         keys = data.keys()
         for key in columns_name:
-            print("key: ", key)
+            # print("key: ", key)
             if keys.__contains__(key):
                 save_data.append(data[key])
             else:
@@ -26,17 +28,19 @@ def model_parameter_save(data, file_path=default_path):
         writer.writerow(save_data)
 
 
-def model_parameter_add_acc(model_number, acc, file_path=default_path):
-    history_model = pd.csv(file_path)
-    history_model_number = history_model['model_number']
-    for i in range(len(history_model_number)):
-        if model_number == history_model[i]:
-            history_model['accuracy'][i] = acc
-            history_model.to_csv(file_path)
+def model_parameter_add_acc(model_number, epoch, acc, file_path=default_path):
+    history_model = pd.read_csv(file_path)
+    history_model = np.array(history_model)
+    print(history_model)
+    for i in range(history_model.shape[0]):
+        print(history_model.shape[0])
+        if model_number == history_model[i][0] and\
+                epoch == history_model[i][3]:
+            history_model[i][6] = str(acc)
+            history_model = pd.DataFrame(history_model, columns=columns_name)
+            history_model.to_csv(file_path, index=None)
             print('成功添加，行数为：', i + 1)
             break
 
 
-
-# path = r'C:\ML\model and log\model_parameter.csv'
-# model_parameter_save(path, 0)
+# model_parameter_add_acc(3, 2, 70)

@@ -9,7 +9,8 @@ from Pretreatment import test_transform
 from utils.FileDeal import show_predicted, create_predicted_dir, get_files_num, \
     get_model_last_file_name, write_log_model
 from Model import resnet18  # resnet18/resnet50
-from Train import model_and_log_path
+from Train import model_and_log_path, get_epoch
+from utils.CSVDeal import model_parameter_add_acc
 
 # 超参数
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  # 运行模型选择的设备
@@ -52,6 +53,10 @@ def predict():
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
     accuracy = 100 * correct / total
+    model_number = get_model_last_file_name(model_and_log_path).split(' ')[1]
+    print(model_number)
+    print(accuracy)
+    model_parameter_add_acc(model_number, get_epoch(), accuracy)
     print('Accuracy of the network on the test_dataset images: %.2f%%' % accuracy)
     write_log_model(model_path, accuracy)
 

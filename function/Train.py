@@ -17,7 +17,7 @@ from Model import resnet18  # resnet18/resnet50
 LR = 0.00001      # 学习率
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
 BATCH_SIZE = 50  # 一次输入训练的批量
-EPOCH = 1         # 训练次数
+EPOCH = 3       # 训练次数
 NUM_WORKERS = 2
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 SEED = 1          # 固定种子，以保证获取相同的训练结果
@@ -44,6 +44,11 @@ train_loader = DataLoader(train_dataset,
                           batch_size=BATCH_SIZE,
                           shuffle=True,             # shuffle为是否打乱数据
                           num_workers=NUM_WORKERS)
+
+
+# 获取EPOCH参数值
+def get_epoch():
+    return EPOCH
 
 
 # 模型训练模型
@@ -76,10 +81,11 @@ def train_model():
             loop.set_postfix({"loss": loss})
         log_all_epoch_history.append(loss)
         model_parameter_dic['loss'] = loss
-        model_parameter_dic['epoch'] = epoch + 1
+        # model_parameter_dic['epoch'] = epoch + 1
         model_parameter_dic['model_number'] = model_number
         model_parameter_dic['model_name'] = model_name
         model_parameter_dic.update(DIC)  # 字典合并
+        model_parameter_dic['epoch'] = epoch + 1
         model_parameter_save(model_parameter_dic)  # 将模型数据保存到CSV文件中
     history_data = {"train_loss_change": log_all_epoch_history}
     model_path = create_dir(model_and_log_path + '\\' + "model %d" % model_number)  # model的文件夹地址
