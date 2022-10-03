@@ -5,7 +5,7 @@ import os
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from Pretreatment import test_transform
+from function.Pretreatment import test_transform
 from utils.FileDeal import show_predicted, create_predicted_dir, get_files_num, \
     get_model_last_file_name, write_log_model
 from Model import resnet18  # resnet18/resnet50
@@ -54,8 +54,6 @@ def predict():
             correct += (predicted == labels).sum().item()
     accuracy = 100 * correct / total
     model_number = get_model_last_file_name(model_and_log_path).split(' ')[1]
-    print(model_number)
-    print(accuracy)
     model_parameter_add_acc(model_number, get_epoch(), accuracy)
     print('Accuracy of the network on the test_dataset images: %.2f%%' % accuracy)
     write_log_model(model_path, accuracy)

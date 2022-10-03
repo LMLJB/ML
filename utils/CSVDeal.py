@@ -22,7 +22,7 @@ def model_parameter_save(data, file_path=default_path):
         for key in columns_name:
             # print("key: ", key)
             if keys.__contains__(key):
-                save_data.append(data[key])
+                save_data.append(str(data[key]))
             else:
                 save_data.append('0')
         writer.writerow(save_data)
@@ -31,11 +31,10 @@ def model_parameter_save(data, file_path=default_path):
 def model_parameter_add_acc(model_number, epoch, acc, file_path=default_path):
     history_model = pd.read_csv(file_path)
     history_model = np.array(history_model)
-    print(history_model)
+    print(model_number, epoch, acc)
     for i in range(history_model.shape[0]):
-        print(history_model.shape[0])
-        if model_number == history_model[i][0] and\
-                epoch == history_model[i][3]:
+        if str(model_number) == str(history_model[i][0]) and str(epoch) == str(history_model[i][3]):
+            print("是否执行")
             history_model[i][6] = str(acc)
             history_model = pd.DataFrame(history_model, columns=columns_name)
             history_model.to_csv(file_path, index=None)
@@ -43,4 +42,6 @@ def model_parameter_add_acc(model_number, epoch, acc, file_path=default_path):
             break
 
 
-# model_parameter_add_acc(3, 2, 70)
+def csv_to_dic_loss(file_path=default_path):
+    history_model = pd.read_csv(file_path)
+    history_model = np.array(history_model)

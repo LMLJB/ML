@@ -85,7 +85,7 @@ def show_predicted(predicted, labels, prefix_num, base, test_path):
         path = test_path + '\\' + labels_name[labels[i]]
         file_name = get_file_name(path, num)
         shutil.copy(path + '\\' + file_name, predicted_image_path + '\\' + labels_name[predicted[i]] +
-                    '\\' + file_name.split('.')[0] + "-" + labels_name[labels[i]] + '.jpg')
+                    '\\' + labels_name[labels[i]] + "-" + file_name.split('.')[0] + '.jpg')
 
 
 # 获取路径下每个文件夹中文件数量

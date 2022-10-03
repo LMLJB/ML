@@ -1,6 +1,6 @@
 from torchvision import transforms
 
-# 训练集图像预处理：缩放裁剪、图像增强、转Tensor、归一化
+# 训练集图像预处理：缩放裁剪、随机翻转、转Tensor、归一化
 train_transform = transforms.Compose([transforms.RandomResizedCrop(224),
                                       transforms.RandomHorizontalFlip(),
                                       transforms.ToTensor(),
