@@ -60,7 +60,8 @@ def get_file_name(path, index):
 
 def get_model_last_file_name(path):
     num_files = os.listdir(path)
-    return num_files[len(num_files) - 1]
+    length = len(num_files)
+    return "model " + str(length - 1)
 
 
 # 将预测图片分配到预测类中
