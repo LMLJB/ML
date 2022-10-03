@@ -1,6 +1,5 @@
 import os
 import shutil
-
 from utils.FileDeal import delete_and_create_dir
 
 
@@ -31,5 +30,3 @@ def custom_test_dataset(number=50):
     delete_and_create_dir(target_path)
     custom_dataset(path=r'C:\ML\test', target_path=target_path, number=number)
 
-
-custom_train_dataset(10)

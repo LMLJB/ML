@@ -4,6 +4,7 @@ import torch.nn.functional as F
 
 
 # ResNet模型
+# ResNet18的残差模块
 class BasicBlock(nn.Module):
     def __init__(self, in_channels, out_channels, strides=[1, 1], padding=1):
         super(BasicBlock, self).__init__()
@@ -16,7 +17,7 @@ class BasicBlock(nn.Module):
             nn.BatchNorm2d(out_channels)
         )
 
-        # shortcut 部分  （由于存在维度不一致的情况 所以分情况）
+        # shortcut部分  （由于存在维度或通道不一致的情况 所以分情况）
         self.shortcut = nn.Sequential()
         if strides[0] != 1 or in_channels != out_channels:  # 若一开始就下采样（即stride[0]!=1）或前后通道数不同，则将输入的x改为输出后的shape
             self.shortcut = nn.Sequential(
@@ -32,6 +33,7 @@ class BasicBlock(nn.Module):
         return out
 
 
+# ResNet50的残差模块
 class Bottleneck(nn.Module):
     def __init__(self, in_channels, out_channels, strides=[1, 1, 1]):
         super(Bottleneck, self).__init__()
@@ -46,7 +48,7 @@ class Bottleneck(nn.Module):
             nn.BatchNorm2d(out_channels * 4)  # 结合ResNet50的图，可知输出通道数为输入通道数的1/4
         )
 
-        # shortcut 部分  （由于存在维度不一致的情况 所以分情况）
+        # shortcut部分  （由于存在维度或通道不一致的情况 所以分情况）
         out_channels = out_channels * 4
         self.shortcut = nn.Sequential()
         if strides[0] != 1 or in_channels != out_channels:
@@ -62,7 +64,7 @@ class Bottleneck(nn.Module):
         return out
 
 
-# 采用bn的网络中，卷积层的输出并不加偏置
+# ResNet18
 class ResNet18(nn.Module):
     def __init__(self, basic_block, num_classes=45):
         super(ResNet18, self).__init__()
@@ -109,6 +111,7 @@ class ResNet18(nn.Module):
         return out
 
 
+# ResNet50
 class ResNet50(nn.Module):
     def __init__(self, bottleneck, num_classes=45):
         super(ResNet50, self).__init__()
@@ -155,9 +158,9 @@ class ResNet50(nn.Module):
 
 def resnet18():
     model = ResNet18(BasicBlock, 45)
-    return model, 'RestNet18'
+    return model, 'ResNet18'
 
 
 def resnet50():
     model = ResNet50(Bottleneck, 45)
-    return model, 'RestNet50'
+    return model, 'ResNet50'

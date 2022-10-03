@@ -1,19 +1,14 @@
 # 数据可视化
-import os.path
-import shutil
-import time
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.ticker import MaxNLocator
-from torchvision.transforms import ToPILImage
-from torchvision import utils as v_utils
 
 project_path = r'C:\ML'
 predicted_image_path = project_path + r'\predicated_image'  # 预测图片放置位置
 loss_image_path = project_path + r'\loss_image'
+model_loss_path = project_path + r"\model and log\model "
 default_path = r'C:\ML\model_parameter.csv'
-show_image = ToPILImage()  # 把Tensor转变为Image
 labels_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿',
                '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田',
                '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地',
@@ -36,19 +31,6 @@ def show_train_loss(log_train_loss, model_path):
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
     plt.savefig(model_path + r'\loss.jpg')
     # plt.show()
-
-
-# 以epoch为迭代次数
-def show_train_test_loss(log_train_loss, log_test_loss):
-    iterations = len(log_train_loss)
-    index = np.arange(0, iterations, 1)
-    plt.plot(index, log_train_loss, c='blue', linestyle='solid', label='train')
-    plt.plot(index, log_test_loss, c='red', linestyle='dashed', label='test')
-    plt.legend()
-    plt.xlabel("iteration")
-    plt.ylabel("Loss")
-    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
-    plt.show()
 
 
 # 显示所有模型的train_loss
@@ -76,6 +58,7 @@ def show_all_model_loss(path=default_path):
     plt.xlabel("epoch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
+    plt.savefig(project_path + r'\loss.jpg')
     plt.show()
 
 
@@ -103,8 +86,10 @@ def show_model_train_test_loss(model_number, path=default_path):
     plt.xlabel("epoch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
+    plt.savefig(model_loss_path + str(model_number) + r'\loss.jpg')
     plt.show()
 
 
-# show_all_model_loss()
-# show_model_train_test_loss(7)
+if __name__ == '__main__':
+    show_all_model_loss()
+    show_model_train_test_loss(11)

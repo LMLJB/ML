@@ -1,18 +1,10 @@
 import os
 import shutil
-
-from torchvision.transforms import ToPILImage
+from utils.Show import labels_name
 
 project_path = r'C:\ML'
 predicted_image_path = project_path + '\\predicted_image'  # 预测图片放置位置
 loss_image_path = project_path + r'\loss_image'
-
-show_image = ToPILImage()  # 把Tensor转变为Image
-labels_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿',
-               '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田',
-               '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地',
-               '立交桥', '篮球场', '网球场', '草地', '裸地', '足球场', '路边停车区', '转盘', '铁路', '风力发电站',
-               '高尔夫球场']
 
 
 # 创建文件夹并返回路径，每次删除原文件夹
@@ -58,6 +50,7 @@ def get_file_name(path, index):
     return files_name[index]
 
 
+# 获取最新模型文件夹的名字
 def get_model_last_file_name(path):
     num_files = os.listdir(path)
     length = len(num_files)

@@ -1,6 +1,5 @@
 import csv
 import os.path
-
 import numpy as np
 import pandas as pd
 
@@ -39,10 +38,5 @@ def model_parameter_add_acc(model_number, epoch, test_loss, acc, file_path=defau
             history_model[i][6] = str(test_loss)
             history_model = pd.DataFrame(history_model, columns=columns_name)
             history_model.to_csv(file_path, index=None)
-            print('成功添加，行数为：', i + 1)
             break
 
-
-# def csv_to_dic_loss(file_path=default_path):
-#     history_model = pd.read_csv(file_path)
-#     history_model = np.array(history_model)
