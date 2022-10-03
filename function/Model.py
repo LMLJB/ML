@@ -155,9 +155,9 @@ class ResNet50(nn.Module):
 
 def resnet18():
     model = ResNet18(BasicBlock, 45)
-    return model
+    return model, 'RestNet18'
 
 
 def resnet50():
     model = ResNet50(Bottleneck, 45)
-    return model
+    return model, 'RestNet50'

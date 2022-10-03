@@ -4,19 +4,20 @@ import os
 import torch.nn as nn
 import time
 from tqdm import tqdm
-from function.Show import show_train_loss
+from utils.Show import show_train_loss
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from Pretreatment import train_transform
-from function.Show import save_data, create_dir, create_log_model
-from Model import resnet18, resnet50  # resnet18/resnet50
+from utils.FileDeal import save_data, create_dir, create_log_model
+from utils.CSVDeal import model_parameter_save
+from Model import resnet18  # resnet18/resnet50
 
 
 # 超参数
 LR = 0.00001      # 学习率
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
 BATCH_SIZE = 50  # 一次输入训练的批量
-EPOCH = 2         # 训练次数
+EPOCH = 1         # 训练次数
 NUM_WORKERS = 2
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 SEED = 1          # 固定种子，以保证获取相同的训练结果
@@ -47,11 +48,15 @@ train_loader = DataLoader(train_dataset,
 
 # 模型训练模型
 def train_model():
-    model = MODEL
+    model, model_name = MODEL
     model = model.to(DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)  # 优化器
     loss_func = LOSS_FUNC
+    # 准备数据
     log_all_epoch_history = []
+    create_dir(model_and_log_path)  # 创建保存模型的文件夹
+    model_parameter_dic = {}  # 保存模型参数
+    model_number = len(os.listdir(model_and_log_path))
     # 开始训练
     for epoch in range(EPOCH):
         DESC = "EPOCH " + str(epoch+1)  # tqdm进度条左侧内容
@@ -70,11 +75,17 @@ def train_model():
             loss = loss.item()
             loop.set_postfix({"loss": loss})
         log_all_epoch_history.append(loss)
+        model_parameter_dic['loss'] = loss
+        model_parameter_dic['epoch'] = epoch + 1
+        model_parameter_dic['model_number'] = model_number
+        model_parameter_dic['model_name'] = model_name
+        model_parameter_dic.update(DIC)  # 字典合并
+        model_parameter_save(model_parameter_dic)  # 将模型数据保存到CSV文件中
     history_data = {"train_loss_change": log_all_epoch_history}
-    model_path = create_dir(model_and_log_path + '\\' + "model %d" % len(os.listdir(model_and_log_path)))  # model的文件夹地址
+    model_path = create_dir(model_and_log_path + '\\' + "model %d" % model_number)  # model的文件夹地址
+    torch.save(model.state_dict(), model_path + r'\model.pkl')  # 保存模型
     train_log_loss_path = model_path + r'\loss.txt'  # 本个model的loss记录的地址
     save_data(train_log_loss_path, history_data)  # 将训练数据保存到文件中
-    torch.save(model.state_dict(), model_path + r'\model.pkl')  # 保存模型
     create_log_model(model_path, dic=DIC)
     show_train_loss(log_all_epoch_history, model_path)  # 显示所有loss变化过程
 
