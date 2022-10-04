@@ -6,3 +6,5 @@
 /t_test/
 /t_train/
 /model and log/
+/model_parameter.csv
+/predicted_image/

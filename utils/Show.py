@@ -59,7 +59,7 @@ def show_all_model_loss(path=default_path):
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
     plt.savefig(project_path + r'\loss.jpg')
-    plt.show()
+    # plt.show()
 
 
 # 显示model_number模型的train_loss与test_loss的比较
@@ -87,9 +87,9 @@ def show_model_train_test_loss(model_number, path=default_path):
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
     plt.savefig(model_loss_path + str(model_number) + r'\loss.jpg')
-    plt.show()
+    # plt.show()
 
 
 if __name__ == '__main__':
     show_all_model_loss()
-    show_model_train_test_loss(11)
+    show_model_train_test_loss(0)

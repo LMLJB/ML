@@ -13,12 +13,12 @@ from utils.CSVDeal import model_parameter_add_acc
 
 # 超参数
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  # 运行模型选择的设备
-BATCH_SIZE = 128
+BATCH_SIZE = 150
 NUM_WORKERS = 2
 MODEL = resnet18()
 project_path = r'C:\ML'  # 项目路径
 dataset_dir = r'C:\ML'  # 数据集路径
-test_path = os.path.join(dataset_dir, 't_test')  # 测试集路径
+test_path = os.path.join(dataset_dir, 'test')  # 测试集路径
 predicated_image_path = project_path + r'\predicted_image'
 test_history_path = project_path + r'\history\test.txt'
 model_and_log_path = r'C:\ML\model and log'
@@ -31,7 +31,7 @@ LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 def predict(epoch):
     model, _ = MODEL  # 获取模型
     model_path = model_and_log_path + '\\' + get_model_last_file_name(model_and_log_path)  # 模型地址可能需要常改
-    model.load_state_dict(torch.load(model_path + '\\' + 'model.pkl'))  # 加载模型
+    model.load_state_dict(torch.load(model_path + '\\' + 'model' + str(epoch) + '.pkl'))  # 加载模型
     model.eval()  # 设置为评估模式，关闭训练时用于优化的一些功能
     model = model.to(DEVICE)  # 模型加载到gpu中
     correct = 0
@@ -62,7 +62,7 @@ def predict(epoch):
     test_loss_value /= count  # 取预测loss值的平均值
     model_number = get_model_last_file_name(model_and_log_path).split(' ')[1]  # 获取最新文件名的number
     model_parameter_add_acc(model_number, epoch, test_loss_value, accuracy)
-    print('Accuracy of the network on the test_dataset images: %.2f%%' % accuracy)
+    # print('Accuracy of the network on the test_dataset images: %.2f%%' % accuracy)
     write_log_model(model_path, accuracy)
 
 
