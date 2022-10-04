@@ -3,9 +3,10 @@ import os.path
 import numpy as np
 import pandas as pd
 
+project_path = r'D:\ML'
 columns_name = ['model_number', 'model_name', 'learning_rate', 'batch_size', 'epoch',  'train_loss',
                 'predicted_loss', 'accuracy', 'num_workers']
-default_path = r'C:\ML\model_parameter.csv'  # 模型参数所存文件名
+default_path = project_path + r'\model_parameter.csv'  # 模型参数所存文件名
 
 
 # 模型数据保存到CSV文件中

@@ -2,7 +2,7 @@ import os
 import shutil
 from utils.FileDeal import delete_and_create_dir
 
-dataset_path = r"C:\ML"  # 数据集路径
+dataset_path = r"D:\ML"  # 数据集路径
 
 
 # 用于创建自己的小量数据集

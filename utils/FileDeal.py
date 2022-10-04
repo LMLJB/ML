@@ -2,7 +2,7 @@ import os
 import shutil
 from utils.Show import labels_name
 
-project_path = r'C:\ML'
+project_path = r'D:\ML'
 predicted_image_path = project_path + '\\predicted_image'  # 预测图片放置位置
 loss_image_path = project_path + r'\loss_image'
 

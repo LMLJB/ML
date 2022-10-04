@@ -18,15 +18,15 @@ from utils.Forecast import encapsulation
 LR = 0.00001      # 学习率
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
 BATCH_SIZE = 200  # 一次输入训练的批量
-EPOCH = 10       # 训练次数
+EPOCH = 5         # 训练次数
 NUM_WORKERS = 2
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
-SEED = 1          # 固定种子，以保证获取相同的训练结果
+SEED = 11          # 固定种子，以保证获取相同的训练结果
 MODEL = resnet18()
-project_path = r'C:\ML'  # 项目路径
-dataset_dir = r'C:\ML'   # 数据集路径
+project_path = r'D:\ML'  # 项目路径
+dataset_dir = r'D:\ML'   # 数据集路径
 model_and_log_path = project_path + r"\model and log"
-train_path = os.path.join(dataset_dir, 'train')  # 训练集路径
+train_path = os.path.join(dataset_dir, 't_train')  # 训练集路径
 
 DIC = dict(time=time.strftime('%Y-%m-%d_%H:%M'),  # 记录模型的超参数
            learning_rate=LR,

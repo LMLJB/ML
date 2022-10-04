@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.ticker import MaxNLocator
 
-project_path = r'C:\ML'
+project_path = r'D:\ML'
 predicted_image_path = project_path + r'\predicated_image'  # 预测图片放置位置
 loss_image_path = project_path + r'\loss_image'
 model_loss_path = project_path + r"\model and log\model "
-default_path = r'C:\ML\model_parameter.csv'
+default_path = project_path + r'\model_parameter.csv'
 labels_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿',
                '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田',
                '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地',
