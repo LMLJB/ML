@@ -3,7 +3,6 @@ from torch import nn
 import torch.nn.functional as F
 
 
-# ResNet模型
 # ResNet18的残差模块
 class BasicBlock(nn.Module):
     def __init__(self, in_channels, out_channels, strides=[1, 1], padding=1):
