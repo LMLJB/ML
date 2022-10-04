@@ -4,8 +4,8 @@ from utils.Show import labels_name
 from utils.Path import project_path
 
 # project_path = r'D:\ML'
-predicted_image_path = project_path + '\\predicted_image'  # 预测图片放置位置
-loss_image_path = project_path + r'\loss_image'
+predicted_image_path = project_path + '/predicted_image'  # 预测图片放置位置
+loss_image_path = project_path + '/loss_image'
 
 
 # 创建文件夹并返回路径，每次删除原文件夹
@@ -27,12 +27,12 @@ def create_dir(path):
 def create_predicted_dir(path):
     delete_and_create_dir(path)
     for name in labels_name:
-        create_dir(path + '\\' + name)
+        create_dir(path + '/' + name)
 
 
 # 创建log.txt文件并记录训练模型的超参数
 def create_log_model(model_path, dic):
-    file = open(model_path + r'\log.txt', 'w')
+    file = open(model_path + '/log.txt', 'w')
     for x, y in dic.items():
         file.write(str(x) + " = " + str(y) + "\n")
     file.close()
@@ -40,7 +40,7 @@ def create_log_model(model_path, dic):
 
 # 往log.txt文件写入预测准确度
 def write_log_model(model_path, accuracy):
-    file = open(model_path + r'\log.txt', 'a')
+    file = open(model_path + '/log.txt', 'a')
     file.write("accuracy = %.2f%%" % accuracy)
     file.close()
 
@@ -77,17 +77,17 @@ def show_predicted(predicted, labels, prefix_num, base, test_path):
                 num = image_number
             else:
                 num = image_number - prefix_num[index - 1]
-        path = test_path + '\\' + labels_name[labels[i]]
+        path = test_path + '/' + labels_name[labels[i]]
         file_name = get_file_name(path, num)
-        shutil.copy(path + '\\' + file_name, predicted_image_path + '\\' + labels_name[predicted[i]] +
-                    '\\' + labels_name[labels[i]] + "-" + file_name.split('.')[0] + '.jpg')
+        shutil.copy(path + '/' + file_name, predicted_image_path + '/' + labels_name[predicted[i]] +
+                    '/' + labels_name[labels[i]] + "-" + file_name.split('.')[0] + '.jpg')
 
 
 # 获取路径下每个文件夹中文件数量
 def get_files_num(path):
     files_num = []
     for name in labels_name:
-        files_num.append(len(os.listdir(path + "\\" + name)))
+        files_num.append(len(os.listdir(path + "/" + name)))
     prefix_num = [0]  # 前缀和
     prefix_num[0] = files_num[0]
     for i in range(1, len(files_num)):

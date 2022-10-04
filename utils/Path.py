@@ -1,2 +1,2 @@
-project_path = r'C:\ML'
-dataset_path = r'C:\ML'
+project_path = '/root/ML'
+dataset_path = '/root/autodl-tmp'

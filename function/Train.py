@@ -18,15 +18,15 @@ from utils.Path import project_path, dataset_path
 # 超参数
 LR = 0.00001      # 学习率
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
-BATCH_SIZE = 200  # 一次输入训练的批量
-EPOCH = 5         # 训练次数
-NUM_WORKERS = 2
+BATCH_SIZE = 250  # 一次输入训练的批量
+EPOCH = 1         # 训练次数
+NUM_WORKERS = 4
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 SEED = 11          # 固定种子，以保证获取相同的训练结果
 MODEL = resnet18()
 # project_path = r'D:\ML'  # 项目路径
 # dataset_path = r'D:\ML'   # 数据集路径
-model_and_log_path = project_path + r"\model and log"
+model_and_log_path = project_path + "/model and log"
 train_path = os.path.join(dataset_path, 'train')  # 训练集路径
 
 DIC = dict(time=time.strftime('%Y-%m-%d_%H:%M'),  # 记录模型的超参数
@@ -59,7 +59,7 @@ def train_model():
     create_dir(model_and_log_path)  # 创建保存模型的文件夹
     model_parameter_dic = {}  # 保存模型参数
     model_number = len(os.listdir(model_and_log_path))  # 训练的第几个模型
-    model_path = create_dir(model_and_log_path + '\\' + "model %d" % model_number)  # 创建model的文件夹地址
+    model_path = create_dir(model_and_log_path + '/' + "model %d" % model_number)  # 创建model的文件夹地址
     # 开始训练
     for epoch in range(EPOCH):
         DESC = "EPOCH " + str(epoch+1)  # tqdm进度条左侧内容
@@ -92,10 +92,10 @@ def train_model():
         model_parameter_save(model_parameter_dic)  # 将模型参数保存到CSV文件中
 
         # 每进行一次Epoch，调用测试函数对测试集测试
-        encapsulation(model.state_dict(), model_path + r'\model' + str(epoch + 1) + '.pkl', epoch + 1)
+        encapsulation(model.state_dict(), model_path + '/model' + str(epoch + 1) + '.pkl', epoch + 1)
 
     history_data = {"train_loss_change": log_all_epoch_history}
-    train_log_loss_path = model_path + r'\loss.txt'  # 本个model的loss记录的地址
+    train_log_loss_path = model_path + '/loss.txt'  # 本个model的loss记录的地址
     save_data(train_log_loss_path, history_data)  # 将训练数据保存到文件中
     create_log_model(model_path, dic=DIC)  # 记录模型超参数的日志
     show_model_train_test_loss(model_number)  # 显示所有loss变化过程

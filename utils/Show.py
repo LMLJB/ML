@@ -6,10 +6,10 @@ from matplotlib.ticker import MaxNLocator
 from utils.Path import project_path
 
 # project_path = r'D:\ML'
-predicted_image_path = project_path + r'\predicated_image'  # 预测图片放置位置
-loss_image_path = project_path + r'\loss_image'
-model_loss_path = project_path + r"\model and log\model "
-default_path = project_path + r'\model_parameter.csv'
+predicted_image_path = project_path + '/predicated_image'  # 预测图片放置位置
+loss_image_path = project_path + '/loss_image'
+model_loss_path = project_path + "/model and log/model "
+default_path = project_path + '/model_parameter.csv'
 labels_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业区', '墓地', '太阳能发电厂', '居民区', '山地', '岛屿',
                '工厂', '教堂', '旱地', '机场跑道', '林地', '桥梁', '梯田', '棒球场', '水田', '沙漠', '河流', '油田',
                '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地',
@@ -30,7 +30,7 @@ def show_train_loss(log_train_loss, model_path):
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
-    plt.savefig(model_path + r'\loss.jpg')
+    plt.savefig(model_path + '/loss.jpg')
     # plt.show()
 
 
@@ -59,7 +59,7 @@ def show_all_model_loss(path=default_path):
     plt.xlabel("epoch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
-    plt.savefig(project_path + r'\loss.jpg')
+    plt.savefig(project_path + '/loss.jpg')
     # plt.show()
 
 
@@ -87,7 +87,7 @@ def show_model_train_test_loss(model_number, path=default_path):
     plt.xlabel("epoch")
     plt.ylabel("Loss")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))  # 用于只显示整数
-    plt.savefig(model_loss_path + str(model_number) + r'\loss.jpg')
+    plt.savefig(model_loss_path + str(model_number) + '/loss.jpg')
     # plt.show()
 
 
