@@ -10,15 +10,16 @@ from utils.FileDeal import show_predicted, create_predicted_dir, get_files_num, 
     get_model_last_file_name, write_log_model
 from Model import resnet18  # resnet18/resnet50
 from utils.CSVDeal import model_parameter_add_acc
+from utils.Path import project_path, dataset_path
 
 # 超参数
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  # 运行模型选择的设备
 BATCH_SIZE = 200
 NUM_WORKERS = 2
 MODEL = resnet18()
-project_path = r'D:\ML'  # 项目路径
-dataset_dir = r'D:\ML'  # 数据集路径
-test_path = os.path.join(dataset_dir, 't_test')  # 测试集路径
+# project_path = r'D:\ML'  # 项目路径
+# dataset_path = r'D:\ML'  # 数据集路径
+test_path = os.path.join(dataset_path, 'test')  # 测试集路径
 predicated_image_path = project_path + r'\predicted_image'
 test_history_path = project_path + r'\history\test.txt'
 model_and_log_path = project_path + r'\model and log'

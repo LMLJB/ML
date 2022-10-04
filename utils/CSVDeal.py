@@ -2,8 +2,9 @@ import csv
 import os.path
 import numpy as np
 import pandas as pd
+from utils.Path import project_path
 
-project_path = r'D:\ML'
+# project_path = r'D:\ML'
 columns_name = ['model_number', 'model_name', 'learning_rate', 'batch_size', 'epoch',  'train_loss',
                 'predicted_loss', 'accuracy', 'num_workers']
 default_path = project_path + r'\model_parameter.csv'  # 模型参数所存文件名

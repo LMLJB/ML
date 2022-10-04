@@ -12,6 +12,7 @@ from utils.FileDeal import save_data, create_dir, create_log_model
 from utils.CSVDeal import model_parameter_save
 from Model import resnet18  # resnet18/resnet50
 from utils.Forecast import encapsulation
+from utils.Path import project_path, dataset_path
 
 
 # 超参数
@@ -23,10 +24,10 @@ NUM_WORKERS = 2
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 SEED = 11          # 固定种子，以保证获取相同的训练结果
 MODEL = resnet18()
-project_path = r'D:\ML'  # 项目路径
-dataset_dir = r'D:\ML'   # 数据集路径
+# project_path = r'D:\ML'  # 项目路径
+# dataset_path = r'D:\ML'   # 数据集路径
 model_and_log_path = project_path + r"\model and log"
-train_path = os.path.join(dataset_dir, 't_train')  # 训练集路径
+train_path = os.path.join(dataset_path, 'train')  # 训练集路径
 
 DIC = dict(time=time.strftime('%Y-%m-%d_%H:%M'),  # 记录模型的超参数
            learning_rate=LR,

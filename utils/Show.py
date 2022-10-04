@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.ticker import MaxNLocator
+from utils.Path import project_path
 
-project_path = r'D:\ML'
+# project_path = r'D:\ML'
 predicted_image_path = project_path + r'\predicated_image'  # 预测图片放置位置
 loss_image_path = project_path + r'\loss_image'
 model_loss_path = project_path + r"\model and log\model "
