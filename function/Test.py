@@ -13,7 +13,7 @@ from utils.CSVDeal import model_parameter_add_acc
 
 # 超参数
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  # 运行模型选择的设备
-BATCH_SIZE = 150
+BATCH_SIZE = 200
 NUM_WORKERS = 2
 MODEL = resnet18()
 project_path = r'C:\ML'  # 项目路径

@@ -14,8 +14,8 @@ labels_name = ['停机坪', '停车场', '公园', '公路', '冰岛', '商业�
                '油罐区', '海滩', '温室', '港口', '游泳池', '湖泊', '火车站', '直升机场', '石质地', '矿区', '稀疏灌木地',
                '立交桥', '篮球场', '网球场', '草地', '裸地', '足球场', '路边停车区', '转盘', '铁路', '风力发电站',
                '高尔夫球场']
-colors = ['black', 'darkred', 'red', 'sienna', 'chocolate', 'darkorange', 'olive',
-          'green', 'darkcyan', 'steelblue', 'slategray', 'navy', 'blue', 'mediumpurple',
+colors = ['red', 'blue', 'black', 'darkred', 'sienna', 'chocolate', 'darkorange', 'olive',
+          'green', 'darkcyan', 'steelblue', 'slategray', 'navy',  'mediumpurple',
           'm', 'deeppink', 'dodgerblue']
 
 

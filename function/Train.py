@@ -17,8 +17,8 @@ from utils.Forecast import encapsulation
 # 超参数
 LR = 0.00001      # 学习率
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
-BATCH_SIZE = 150  # 一次输入训练的批量
-EPOCH = 100       # 训练次数
+BATCH_SIZE = 200  # 一次输入训练的批量
+EPOCH = 10       # 训练次数
 NUM_WORKERS = 2
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 SEED = 1          # 固定种子，以保证获取相同的训练结果
@@ -65,6 +65,8 @@ def train_model():
         UNIT = "Batches"                # tqdm进度条中处理量单位it改为Batches
         COLOUR = "blue"                 # tqdm进度条的颜色
         loss = 0
+        train_loss_avg_value = 0
+        count = 0
         loop = tqdm(iterable=train_loader, desc=DESC, unit=UNIT, colour=COLOUR)
         for inputs, labels in loop:  # 分配batch data -> inputs为输入图片, labels为输入图片的类型（标签）
             inputs = inputs.to(DEVICE)
@@ -76,9 +78,12 @@ def train_model():
             optimizer.step()                  # 根据梯度更新网络参数
             loss = loss.item()
             loop.set_postfix({"loss": loss})
-        log_all_epoch_history.append(loss)
+            count += 1
+            train_loss_avg_value += loss
+        train_loss_avg_value /= count
+        log_all_epoch_history.append(train_loss_avg_value)
         # 模型参数采用字典形式保存
-        model_parameter_dic['train_loss'] = loss
+        model_parameter_dic['train_loss'] = train_loss_avg_value
         model_parameter_dic['model_number'] = model_number
         model_parameter_dic['model_name'] = model_name
         model_parameter_dic.update(DIC)  # 字典合并
