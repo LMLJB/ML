@@ -18,9 +18,9 @@ from utils.Path import project_path, dataset_path
 # 超参数
 LR = 0.00001      # 学习率
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"  # 运行模型选择的设备
-BATCH_SIZE = 250  # 一次输入训练的批量
-EPOCH = 1         # 训练次数
-NUM_WORKERS = 4
+BATCH_SIZE = 200  # 一次输入训练的批量
+EPOCH = 100         # 训练次数
+NUM_WORKERS = 3
 LOSS_FUNC = nn.CrossEntropyLoss()  # 定义损失函数
 SEED = 11          # 固定种子，以保证获取相同的训练结果
 MODEL = resnet18()
